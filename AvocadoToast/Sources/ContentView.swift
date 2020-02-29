@@ -10,7 +10,24 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, World!")
+        TabView {
+            NavigationView {
+                OrderForm()
+            }
+            .tabItem ({
+                HStack{
+                    Image(systemName: "square.and.pencil")
+                    Text("Order")
+                }
+            })
+            OrderHistory(previousOrders: CompletedOrder.samples)
+                .tabItem({
+                    HStack{
+                        Image(systemName: "clock.fill")
+                        Text("History")
+                    }
+                })
+        }
     }
 }
 
