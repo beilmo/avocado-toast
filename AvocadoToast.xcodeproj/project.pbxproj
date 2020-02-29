@@ -56,12 +56,8 @@
 		D00DC42C240AAEB300B57DDA /* AvocadoToast */ = {
 			isa = PBXGroup;
 			children = (
-				D00DC42D240AAEB300B57DDA /* AppDelegate.swift */,
-				D00DC42F240AAEB300B57DDA /* SceneDelegate.swift */,
-				D00DC431240AAEB300B57DDA /* ContentView.swift */,
-				D00DC433240AAEB500B57DDA /* Assets.xcassets */,
-				D00DC438240AAEB500B57DDA /* LaunchScreen.storyboard */,
-				D00DC43B240AAEB500B57DDA /* Info.plist */,
+				D00DC443240AB0B500B57DDA /* Support */,
+				D00DC441240AAEE300B57DDA /* Sources */,
 				D00DC435240AAEB500B57DDA /* Preview Content */,
 			);
 			path = AvocadoToast;
@@ -73,6 +69,26 @@
 				D00DC436240AAEB500B57DDA /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D00DC441240AAEE300B57DDA /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D00DC431240AAEB300B57DDA /* ContentView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		D00DC443240AB0B500B57DDA /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				D00DC43B240AAEB500B57DDA /* Info.plist */,
+				D00DC42D240AAEB300B57DDA /* AppDelegate.swift */,
+				D00DC42F240AAEB300B57DDA /* SceneDelegate.swift */,
+				D00DC433240AAEB500B57DDA /* Assets.xcassets */,
+				D00DC438240AAEB500B57DDA /* LaunchScreen.storyboard */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -287,7 +303,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AvocadoToast/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AvocadoToast/Info.plist;
+				INFOPLIST_FILE = AvocadoToast/Support/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +322,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AvocadoToast/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = AvocadoToast/Info.plist;
+				INFOPLIST_FILE = AvocadoToast/Support/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
