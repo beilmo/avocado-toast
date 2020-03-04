@@ -13,6 +13,7 @@ enum BreadType: CaseIterable, Hashable, Identifiable {
     case wheat
     case rye
     case multiGrain
+    case multiGrainToast
     case sourdough
 }
 
@@ -31,6 +32,9 @@ extension BreadType {
 
         case .multiGrain:
             return "Multi-Grain"
+
+        case .multiGrainToast:
+            return "Multi-Grain Toast"
 
         case .sourdough:
             return "Sourdough"

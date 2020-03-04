@@ -9,18 +9,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    let history = History()
+
     var body: some View {
         TabView {
-            NavigationView {
-                OrderForm()
-            }
-            .tabItem ({
-                HStack{
-                    Image(systemName: "square.and.pencil")
-                    Text("Order")
-                }
-            })
-            OrderHistory(previousOrders: CompletedOrder.samples)
+            OrderForm(history)
+                .tabItem ({
+                    HStack{
+                        Image(systemName: "square.and.pencil")
+                        Text("Order")
+                    }
+                })
+            HistoryView(history: history)
                 .tabItem({
                     HStack{
                         Image(systemName: "clock.fill")
