@@ -10,6 +10,7 @@ import SwiftUI
 
 struct OrderForm: View {
     @State private var order: Order = Order()
+    @State private var showAlert: Bool = false
 
     private let history: History
 
@@ -59,8 +60,20 @@ struct OrderForm: View {
                     }
                 }
                 Section {
-                    Button(action: submitOrder) { Text("Order") }
-                        .disabled(order.quantity == 0)
+                    Button(action: {
+                        self.submitOrder()
+                        self.showAlert = true
+                    }) {
+                        Text("Order")
+                    }
+                    .disabled(order.quantity == 0)
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Confirmation"),
+                            message: Text("The order has been placed. Thank you!"),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
             }
             .navigationBarTitle(Text("Avocado Toast"))
