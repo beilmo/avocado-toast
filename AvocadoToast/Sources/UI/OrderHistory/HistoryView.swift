@@ -28,11 +28,9 @@ struct HistoryView: View {
                     self.history.remove(at: index)
                 }
             }
-
             .navigationBarTitle("Order History")
             .navigationBarItems(leading: Button("Clear", action: history.clear),
                                 trailing: EditButton())
-
         }
     }
 }
