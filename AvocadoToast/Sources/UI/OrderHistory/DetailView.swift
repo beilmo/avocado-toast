@@ -17,8 +17,9 @@ struct DetailView: View {
                 .padding()
             EggPlacementView(eggPlacement: .constant(.center))
                 .disabled(true)
+            Spacer()
         }
-        
+        .navigationBarTitle("", displayMode: .inline)
     }
 }
 
