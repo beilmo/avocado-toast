@@ -10,16 +10,18 @@ import Foundation
 import SwiftUI
 
 struct Order {
-    var bread: BreadType = .wheat
-    var spread: Spread = .none
-    var avocado: AvocadoStyle = .sliced
+    var bread: BreadType
+    var spread: Spread
+    var avocado: AvocadoStyle
     
-    var includeSalt: Bool = true
-    var includeRedPepper: Bool = false
-    var includeEgg: Bool = false
+    var includeSalt: Bool
+    var includeRedPepper: Bool
+    var includeEgg: Bool
 
-    var eggLocation: UnitPoint = .center
-    var quantity: Int = 0
+    var eggLocation: UnitPoint
+    var quantity: Int
+
+    static let `default` = Self(bread: .wheat, spread: .none, avocado: .sliced, includeSalt: true, includeRedPepper: false, includeEgg: false, eggLocation: .center, quantity: 0)
 }
 
 extension Order {
