@@ -9,14 +9,10 @@
 import SwiftUI
 
 struct OrderForm: View {
-    @State private var order: Order = Order()
+    @State private var order = Order.default
     @State private var showAlert: Bool = false
 
-    private let history: History
-
-    init(_ history: History) {
-        self.history = history
-    }
+    let processor: OrderProcessor
 
     var body: some View {
         NavigationView {
@@ -42,7 +38,7 @@ struct OrderForm: View {
                     Toggle(isOn: $order.includeSalt) {
                         Text("Include Salt")
                     }
-                    Toggle(isOn: $order.includeRedPepper) {
+                    Toggle(isOn:$order.includeRedPepper) {
                         Text("Include Red Pepper")
                     }
                     Toggle(isOn: $order.includeEgg.animation()) {
@@ -81,9 +77,9 @@ struct OrderForm: View {
     }
 
     func submitOrder() {
-        history.add(CompleteOrder(order: order))
+        processor.process(order)
         withAnimation {
-            order = Order()
+            order = .default
         }
     }
 }
@@ -91,12 +87,12 @@ struct OrderForm: View {
 struct OrderForm_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            OrderForm(History())
-            OrderForm(History())
+            OrderForm(processor: LocalOrderProcessor(history: History()))
+            OrderForm(processor: LocalOrderProcessor(history: History()))
                 .environment(\.sizeCategory, .extraExtraLarge)
                 .environment(\.colorScheme, .dark)
                 .environment(\.locale, Locale(identifier: "en_US"))
-            OrderForm(History())
+            OrderForm(processor: LocalOrderProcessor(history: History()))
                 .environment(\.sizeCategory, .small)
                 .environment(\.colorScheme, .light)
                 .environment(\.locale, Locale(identifier: "he_IL"))

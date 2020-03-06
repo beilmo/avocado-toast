@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            OrderForm(history)
+            OrderForm(processor: LocalOrderProcessor(history: history))
                 .tabItem ({
                     HStack{
                         Image(systemName: "square.and.pencil")
