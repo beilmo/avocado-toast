@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DetailView: View {
     let presenter: OrderPresenter
+    @State private var isPreviewPresented: Bool = false
     
     var body: some View {
         VStack {
@@ -17,6 +18,12 @@ struct DetailView: View {
                 .padding()
             AvocadoToastView(order: .constant(presenter.order))
                 .disabled(true)
+            Spacer()
+            Button(action: { self.isPreviewPresented.toggle() }, label: {
+                Text("Preview PDF")
+            }).sheet(isPresented: $isPreviewPresented) {
+                PDFReaderView(presenter: self.presenter)
+            }
             Spacer()
         }
         .navigationBarTitle("", displayMode: .inline)

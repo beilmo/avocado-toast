@@ -47,4 +47,12 @@ extension OrderPresenter {
     var eggLocation: UnitPoint {
         order.eggLocation
     }
+
+    var quantity: String {
+        "Quantity: \(order.quantity)"
+    }
+
+    var image: UIImage {
+        UIImage(named: "Toast")!
+    }
 }

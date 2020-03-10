@@ -9,7 +9,7 @@
 import Foundation
 
 /// Topping to be applied over the avocado.
-enum Topping: CaseIterable, Hashable, Identifiable {
+enum Topping: String, CaseIterable, Hashable, Identifiable {
 
     /// The Salt topping is required.
     case salt
