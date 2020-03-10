@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct OrderPresenter {
     let order: CompleteOrder
@@ -41,5 +42,9 @@ extension OrderPresenter {
         default:
             return "\(order.bread.name) with \(order.spread.name)"
         }
+    }
+
+    var eggLocation: UnitPoint {
+        order.eggLocation
     }
 }

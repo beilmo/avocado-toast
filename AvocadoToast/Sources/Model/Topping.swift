@@ -22,7 +22,6 @@ enum Topping: CaseIterable, Hashable, Identifiable {
 }
 
 extension Topping {
-
+    
     var id: Int { hashValue }
-
 }

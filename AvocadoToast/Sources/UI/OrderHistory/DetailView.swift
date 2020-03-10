@@ -15,7 +15,7 @@ struct DetailView: View {
         VStack {
             OrderRow(presenter: presenter)
                 .padding()
-            EggPlacementView(eggPlacement: .constant(.center))
+            AvocadoToastView(order: .constant(presenter.order))
                 .disabled(true)
             Spacer()
         }
