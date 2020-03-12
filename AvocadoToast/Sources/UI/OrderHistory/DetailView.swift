@@ -11,6 +11,7 @@ import SwiftUI
 struct DetailView: View {
     let presenter: OrderPresenter
     @State private var isPreviewPresented: Bool = false
+    @State private var isActivityVCPresented: Bool = false
     
     var body: some View {
         VStack {
@@ -21,8 +22,9 @@ struct DetailView: View {
             Spacer()
             Button(action: { self.isPreviewPresented.toggle() }, label: {
                 Text("Preview PDF")
-            }).sheet(isPresented: $isPreviewPresented) {
-                PDFReaderView(presenter: self.presenter)
+            })
+                .sheet(isPresented: $isPreviewPresented) {
+                    PDFOrderPreviewView(presenter: self.presenter)
             }
             Spacer()
         }

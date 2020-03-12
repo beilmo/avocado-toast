@@ -29,5 +29,6 @@ struct PDFViewer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: PDFView, context: Context) {
+        uiView.autoScales = true
     }
 }
