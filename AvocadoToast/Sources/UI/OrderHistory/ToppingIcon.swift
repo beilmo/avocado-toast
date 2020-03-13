@@ -48,7 +48,7 @@ extension Topping {
         }
     }
     
-    fileprivate var abbreviation: String {
+    var abbreviation: String {
         switch self {
         case .salt:
             return "S"

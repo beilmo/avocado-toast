@@ -15,7 +15,7 @@ struct PDFViewer: UIViewRepresentable {
 
     func makeUIView(context: Context) -> PDFView {
         // Create a PDF file
-        let pdf = PDFCreator(paperSize: .A3, presenter: presenter)
+        let pdf = PDFCreator(paperSize: .A4, presenter: presenter)
         let data = pdf.create()
 
         // Create a `PDFView`
