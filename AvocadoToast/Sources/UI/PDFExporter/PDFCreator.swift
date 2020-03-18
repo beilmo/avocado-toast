@@ -41,13 +41,13 @@ class PDFCreator: PDFOperations {
 
         let data = renderer.pdfData { (context) in
             context.beginPage()
-            
-            let titleText = DrawableText(paperSize: paperSize).drawTitle(atPosition: .center, presenter.summary)
-            let timestampText = DrawableText(paperSize: paperSize).drawText(atPosition: .leading, presenter.purchaseDate, offsetY: (titleText + paperSize.sizeInPoints.height * 0.1))
-            let quantityText = DrawableText(paperSize: paperSize).drawText(atPosition: .leading, presenter.quantity, offsetY: timestampText.bottom + paperSize.sizeInPoints.height * 0.01)
+
+            let titleText = DrawableText(paperSize: paperSize, context: context).drawTitle(alignment: .center, presenter.summary)
+            let timestampText = DrawableText(paperSize: paperSize, context: context).drawText(alignment: .leading, presenter.purchaseDate, offsetY: (titleText + paperSize.sizeInPoints.height * 0.1))
+            let quantityText = DrawableText(paperSize: paperSize, context: context).drawText(alignment: .leading, presenter.quantity, offsetY: timestampText.bottom + paperSize.sizeInPoints.height * 0.01)
 
             let toppings = "Toppings: "
-            let toppingsText = DrawableText(paperSize: paperSize).drawText(atPosition: .leading, toppings, offsetY: quantityText.bottom + paperSize.sizeInPoints.height * 0.01)
+            let toppingsText = DrawableText(paperSize: paperSize, context: context).drawText(alignment: .leading, toppings, offsetY: quantityText.bottom + paperSize.sizeInPoints.height * 0.01)
 
             let circleDiameter = toppingsText.bottom - toppingsText.top
 
@@ -76,13 +76,25 @@ class PDFCreator: PDFOperations {
                 }
                 toppingsPosition.append(circlePosition)
 
-                circle.addInnerText(atPosition: .center, topping.abbreviation, color: textColor)
+                circle.addInnerText(alignment: .center, topping.abbreviation, color: textColor)
             }
 
-            DrawableImage(paperSize: paperSize).draw(atPosition: .center, presenter.image, offsetY: toppingsText.bottom)
+            let toastImage = DrawableImage(paperSize: paperSize).draw(alignment: .center, presenter.image, offsetY: toppingsText.bottom)
+
+            //let words = String.loremIpsum.components(separatedBy: .whitespacesAndNewlines)
+            //let words = stringComponents.filter( { $0.isEmpty } )
+            //print(words)
+
+            let paragraph = DrawableText(paperSize: paperSize, context: context).drawParagraphText(rectAlignment: .center, textAlignment: .justified, string: .loremIpsum, offsetY: toastImage.bottom)
+            let paragraph2 = DrawableText(paperSize: paperSize, context: context).drawParagraphText(rectAlignment: .center, textAlignment: .justified, string: .loremIpsum, offsetY: paragraph.bottom)
+            let paragraph3 = DrawableText(paperSize: paperSize, context: context).drawParagraphText(rectAlignment: .center, textAlignment: .justified, string: .loremIpsum, offsetY: paragraph2.bottom)
         }
 
         return data
     }
+}
+
+extension String {
+    static let loremIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam venenatis a tortor sed mattis. Mauris finibus feugiat eros, id accumsan eros viverra id. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis gravida quam ligula, sit amet pharetra dolor accumsan vel. Nulla sit amet erat luctus, mollis ex in, interdum augue. Sed scelerisque libero quis nunc maximus scelerisque. Fusce rutrum justo elit. Donec mattis pulvinar velit, hendrerit placerat ipsum elementum sit amet. Phasellus et bibendum felis. Vivamus ac orci dapibus metus fringilla auctor. Nullam ullamcorper sem vitae urna dignissim tristique. Nullam finibus in augue vitae ornare."
 }
 

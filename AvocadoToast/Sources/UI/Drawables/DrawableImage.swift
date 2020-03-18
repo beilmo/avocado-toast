@@ -18,7 +18,7 @@ class DrawableImage {
 
     static let shared = DrawableImage(paperSize: .A4)
 
-    func draw(atPosition position: Position, _ image: UIImage, offsetY: CGFloat) -> CGFloat {
+    func draw(alignment: Alignment, _ image: UIImage, offsetY: CGFloat) -> EdgeInsets {
 
         let maxHeight = paperSize.sizeInPoints.height * 0.4
         let maxWidth = paperSize.sizeInPoints.width * 0.8
@@ -38,6 +38,16 @@ class DrawableImage {
 
         image.draw(in: imageRect)
 
-        return imageRect.origin.y + imageRect.size.height
+        let leading = imageRect.origin.x // x coord
+        let trailing = imageRect.origin.x + imageRect.size.width // width
+        let bottom = imageRect.origin.y + imageRect.size.height // height
+        let top = imageRect.origin.y // y coord
+
+        let edgeInsets = EdgeInsets(leading: leading,
+                                    trailing: trailing,
+                                    bottom: bottom,
+                                    top: top)
+
+        return edgeInsets
     }
 }

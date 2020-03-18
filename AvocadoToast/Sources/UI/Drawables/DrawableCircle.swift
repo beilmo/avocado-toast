@@ -70,9 +70,9 @@ class DrawableCircle {
         return edgeInsets
     }
 
-    func addInnerText(atPosition position: Position, _ string: String, color: UIColor) {
+    func addInnerText(alignment: Alignment, _ string: String, color: UIColor) {
         let textRect = CGRect(x: offsetX, y: offsetY, width: rect.width, height: rect.height)
-        DrawableText.shared.drawInner(atPosition: position, in: textRect, string, color: color)
+        DrawableText.shared.drawInner(alignment: alignment, in: textRect, string, color: color)
     }
 
     func color(_ color: UIColor) {

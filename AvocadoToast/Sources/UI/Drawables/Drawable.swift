@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-enum Position {
+enum Alignment {
     case center
     case trailing
     case leading
@@ -25,7 +25,7 @@ struct EdgeInsets {
 
 protocol DrawableOperations {
     func draw(element: Any)
-    func alignment(_ alignment: Position)
+    func alignment(_ alignment: Alignment)
     func offset(_ offset: CGFloat)
 }
 
@@ -40,7 +40,7 @@ struct Drawable: DrawableOperations {
         
     }
 
-    func alignment(_ alignment: Position) {
+    func alignment(_ alignment: Alignment) {
         
     }
 
