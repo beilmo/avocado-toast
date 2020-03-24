@@ -17,142 +17,138 @@ class DrawableText {
         self.paperSize = paperSize
         self.context = context
     }
+}
 
-    static let shared = DrawableText(paperSize: .A4, context: UIGraphicsPDFRendererContext())
+extension DrawableText {
 
-    func drawInner(alignment: Alignment, in rect: CGRect, _ string: String, color: UIColor) {
-
-        let textFont = UIFont.preferredFont(forTextStyle: .body)
-        let textAttributes: [NSAttributedString.Key: Any] =
-            [NSAttributedString.Key.font: textFont,
-             NSAttributedString.Key.foregroundColor: color]
-        let attributedText = NSAttributedString(
-            string: string,
-            attributes: textAttributes
-        )
-
-        let textStringSize = attributedText.size()
-        var textStringRect = CGRect()
+    func drawInner(string: String, font: CGFloat, alignment: Alignment, in rect: CGRect, color: UIColor) {
+        let attributedString = getAttributedString(string: string, font: font, color: color)
+        var stringRect = attributedString.rect(containerWidth: rect.width)
 
         switch alignment {
         case .center:
-            textStringRect = CGRect(
-                x: rect.minX + (rect.width - textStringSize.width) / 2.0,
-                y: rect.minY + (rect.height - textStringSize.height) / 2.0,
-                width: textStringSize.width,
-                height: textStringSize.height
+            stringRect = CGRect(
+                x: rect.minX + (rect.width - stringRect.width) / 2.0,
+                y: rect.minY + (rect.height - stringRect.height) / 2.0,
+                width: stringRect.width,
+                height: stringRect.height
             )
         case .leading:
-            textStringRect = CGRect(
+            stringRect = CGRect(
                 x: rect.minX + rect.width * 0.05,
-                y: rect.minY + (rect.height - textStringSize.height) / 2.0,
-                width: textStringSize.width,
-                height: textStringSize.height
+                y: rect.minY + (rect.height - stringRect.height) / 2.0,
+                width: stringRect.width,
+                height: stringRect.height
             )
         case .trailing:
-            textStringRect = CGRect(
-                x: rect.minX + (rect.width - textStringSize.width) - rect.width * 0.05,
-                y: rect.minY + (rect.height - textStringSize.height) / 2.0,
-                width: textStringSize.width,
-                height: textStringSize.height
+            stringRect = CGRect(
+                x: rect.minX + (rect.width - stringRect.width) - rect.width * 0.05,
+                y: rect.minY + (rect.height - stringRect.height) / 2.0,
+                width: stringRect.width,
+                height: stringRect.height
             )
         }
-
-        attributedText.draw(in: textStringRect)
+        //Coordinator.shared.addElementRect(textStringRect)
+        //Coordinator.shared.draw(element: attributedString)
+        attributedString.draw(in: stringRect)
     }
 
-    func drawTitle(alignment: Alignment, _ title: String) -> CGFloat {
+    func draw(string: String, font: CGFloat, position: Position, alignment: Alignment) {
+        let attributedString = getAttributedString(string: string, font: font, color: .label)
+        let stringRect = attributedString.rect(containerWidth: paperSize.sizeInPoints.width * 0.8)
 
-        let titleFont = UIFont.preferredFont(forTextStyle: .largeTitle)
-        let titleAttributes: [NSAttributedString.Key: Any] =
-            [NSAttributedString.Key.font: titleFont]
-        let attributedTitle = NSAttributedString(
-            string: title,
-            attributes: titleAttributes
-        )
+        align(in: stringRect, textAlignment: alignment, position: position)
 
-        let titleStringSize = attributedTitle.size()
-        var titleStringRect = CGRect()
-
-        switch alignment {
-        case .center:
-            titleStringRect = CGRect(
-                x: (paperSize.sizeInPoints.width - titleStringSize.width) / 2.0,
-                y: 36,
-                width: titleStringSize.width,
-                height: titleStringSize.height
-            )
-        case .leading:
-            titleStringRect = CGRect(
-                x: 36,
-                y: 36,
-                width: titleStringSize.width,
-                height: titleStringSize.height
-            )
-        case .trailing:
-            titleStringRect = CGRect(
-                x: (paperSize.sizeInPoints.width - titleStringSize.width),
-                y: 36,
-                width: titleStringSize.width,
-                height: titleStringSize.height
-            )
-        }
-
-        attributedTitle.draw(in: titleStringRect)
-
-        return titleStringRect.origin.y + titleStringRect.size.height
+        Coordinator.shared.draw(element: attributedString)
     }
 
-    func drawText(alignment: Alignment, _ string: String, offsetY: CGFloat) -> EdgeInsets {
+    func getAttributedString(string: String, font: CGFloat, color: UIColor) -> NSAttributedString {
+        let stringFont = UIFont.systemFont(ofSize: font)
 
-        let textFont = UIFont.preferredFont(forTextStyle: .body)
-        let textAttributes: [NSAttributedString.Key: Any] =
-            [NSAttributedString.Key.font: textFont]
-        let attributedText = NSAttributedString(
-            string: string,
-            attributes: textAttributes
-        )
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .natural
+        paragraphStyle.lineBreakMode = .byWordWrapping
 
-        let textStringSize = attributedText.size()
-        var textStringRect = CGRect()
+        let textAttributes = [
+            NSAttributedString.Key.paragraphStyle: paragraphStyle,
+            NSAttributedString.Key.font: stringFont,
+            NSAttributedString.Key.foregroundColor: color
+        ]
 
-        switch alignment {
-        case .center:
-            textStringRect = CGRect(
-                x: (paperSize.sizeInPoints.width - textStringSize.width) / 2.0,
-                y: offsetY,
-                width: textStringSize.width,
-                height: textStringSize.height
-            )
-        case .leading:
-            textStringRect = CGRect(
-                x: 36,
-                y: offsetY,
-                width: textStringSize.width,
-                height: textStringSize.height
-            )
-        case .trailing:
-            textStringRect = CGRect(
-                x: (paperSize.sizeInPoints.width - textStringSize.width),
-                y: offsetY,
-                width: textStringSize.width,
-                height: textStringSize.height
-            )
+        return NSAttributedString(string: string, attributes: textAttributes)
+    }
+
+    func align(in rect: CGRect, textAlignment: Alignment, position: Position) {
+        var rect = rect
+
+        var previousStringRect = EdgeInsets()
+        if Coordinator.shared.elementsEdges.count > 0 {
+            previousStringRect = Coordinator.shared.elementsEdges.last!
         }
 
-        attributedText.draw(in: textStringRect)
+        switch position {
+        case .onTheNextLine:
+            switch textAlignment {
+            case .center:
+                rect = CGRect(
+                    x: (paperSize.sizeInPoints.width - rect.width) / 2.0,
+                    y: previousStringRect.bottom,
+                    width: rect.width,
+                    height: rect.height
+                )
+            case .leading:
+                rect = CGRect(
+                    x: 36,
+                    y: previousStringRect.bottom,
+                    width: rect.width,
+                    height: rect.height
+                )
+            case .trailing:
+                rect = CGRect(
+                    x: (paperSize.sizeInPoints.width - rect.width),
+                    y: previousStringRect.bottom,
+                    width: rect.width,
+                    height: rect.height
+                )
+            }
+        case .onTheSameLine:
+            switch textAlignment {
+            case .center:
+                rect = CGRect(
+                    x: (paperSize.sizeInPoints.width - previousStringRect.trailing) / 2.0,
+                    y: rect.origin.y,
+                    width: paperSize.sizeInPoints.width,
+                    height: rect.height
+                )
+            case .leading:
+                rect = CGRect(
+                    x: 36,
+                    y: rect.origin.y,
+                    width: rect.width,
+                    height: rect.height
+                )
+            case .trailing:
+                rect = CGRect(
+                    x: (paperSize.sizeInPoints.width - previousStringRect.trailing),
+                    y: rect.origin.y,
+                    width: rect.width,
+                    height: rect.height
+                )
+            }
+        }
 
-        let leading = textStringRect.origin.x // x coord
-        let trailing = textStringRect.origin.x + textStringRect.size.width // width
-        let bottom = textStringRect.origin.y + textStringRect.size.height // height
-        let top = textStringRect.origin.y // y coord
+        let leading = rect.origin.x // x coord
+        let trailing = rect.origin.x + rect.size.width // width
+        let bottom = rect.origin.y + rect.size.height // height
+        let top = rect.origin.y // y coord
 
         let edgeInsets = EdgeInsets(leading: leading,
                                     trailing: trailing,
                                     bottom: bottom,
                                     top: top)
 
-        return edgeInsets
+        Coordinator.shared.addElementEdges(edgeInsets)
+        Coordinator.shared.addElementRect(rect)
     }
 
     func drawParagraphText(rectAlignment: Alignment, textAlignment: NSTextAlignment, string: String, offsetY: CGFloat) -> EdgeInsets {
@@ -215,6 +211,7 @@ class DrawableText {
             var rowMultiplier: CGFloat = 1
 
             var composedString = ""
+            var supplementString = ""
             var rowString = ""
             for word in words {
                 let composedAttributedText = NSAttributedString(string: composedString, attributes: textAttributes)
@@ -246,10 +243,21 @@ class DrawableText {
 
                     //print("Row String:", rowString)
                 } else {
+                    supplementString += "\(word) "
                     print("create new page with words: \(word)")
+//                    context.beginPage()
+//                    composedString += "\(word) "
+//                    label.attributedText = NSAttributedString(string: composedString, attributes: textAttributes)
                 }
             }
             label.drawText(in: labelRect)
+            if !supplementString.isEmpty {
+                context.beginPage()
+                label.frame = CGRect(x: 0, y: 0, width: CGFloat(paperSize.sizeInPoints.width) * 0.8, height: stringTextSizeHeight-50)
+                let attributedText = NSAttributedString(string: supplementString, attributes: textAttributes)
+                label.attributedText = attributedText
+                label.drawText(in: label.frame)
+            }
             //print("Cannot draw this on the current page. Need start a new page")
         }
 
@@ -270,8 +278,8 @@ class DrawableText {
 extension NSAttributedString {
 
     func height(containerWidth: CGFloat) -> CGFloat {
-
-        let rect = self.boundingRect(with: CGSize.init(width: containerWidth, height: CGFloat.greatestFiniteMagnitude),
+        let size = CGSize(width: containerWidth, height: .greatestFiniteMagnitude)
+        let rect = self.boundingRect(with: size,
                                      options: [.usesLineFragmentOrigin, .usesFontLeading],
                                      context: nil)
         return ceil(rect.size.height)
@@ -283,6 +291,14 @@ extension NSAttributedString {
                                      options: [.usesLineFragmentOrigin, .usesFontLeading],
                                      context: nil)
         return ceil(rect.size.width)
+    }
+
+    func rect(containerWidth: CGFloat) -> CGRect {
+        let size = CGSize(width: containerWidth, height: .greatestFiniteMagnitude)
+        let rect = self.boundingRect(with: size,
+                                     options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                     context: nil)
+        return rect
     }
 }
 

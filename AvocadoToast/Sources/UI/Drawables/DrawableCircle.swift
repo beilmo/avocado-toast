@@ -11,71 +11,74 @@ import UIKit
 import SwiftUI
 
 class DrawableCircle {
-    let rect: CGRect
+    var paperSize: PaperSize
+    var rect: CGRect!
+    var size: CGFloat!
 
-    private var offsetX: CGFloat = 0
-    private var offsetY: CGFloat = 0
-    private var color: UIColor = .red
+    let context: UIGraphicsPDFRendererContext
 
-    init(rect: CGRect) {
-        self.rect = rect
+    init(paperSize: PaperSize, context: UIGraphicsPDFRendererContext) {
+        self.paperSize = paperSize
+        self.context = context
     }
 
-    func draw() -> CGFloat {
-        let circleCGPath = Circle().path(in: rect)
-        let circleRect = circleCGPath.cgPath.boundingBox
+    init(paperSize: PaperSize, context: UIGraphicsPDFRendererContext, size: CGFloat) {
+        self.paperSize = paperSize
+        self.context = context
+        self.size = size
+    }
 
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 200, height: 200))
+    init(rect: CGRect, paperSize: PaperSize, context: UIGraphicsPDFRendererContext, size: CGFloat) {
+        self.rect = rect
+        self.paperSize = paperSize
+        self.context = context
+        self.size = size
+    }
+}
 
-        let image = renderer.image { (context) in
-            context.cgContext.setFillColor(UIColor.red.cgColor)
-            context.cgContext.addPath(circleCGPath.cgPath)
-            context.cgContext.drawPath(using: .fill)
+extension DrawableCircle {
+
+    func draw(color: UIColor) {
+        guard let lastElementRect = Coordinator.shared.elementsEdges.last else {
+            preconditionFailure("Error in getting last coords")
         }
 
-        image.draw(in: CGRect(x: 0, y: 0, width: 200, height: 200))
+        if size == nil {
+            size = lastElementRect.bottom - lastElementRect.top
+        }
 
-        return circleRect.origin.y + circleRect.size.height
-    }
+        rect = CGRect(
+            x: lastElementRect.trailing,
+            y: lastElementRect.top,
+            width: size,
+            height: size)
 
-    func draw(offsetX: CGFloat, offsetY: CGFloat) -> EdgeInsets {
-        let circleCGPath = Circle().path(in: rect)
-        let circleRect = circleCGPath.cgPath.boundingBox
+        let circleCGPath = Circle().path(in: CGRect(x: 0, y: 0, width: size, height: size))
 
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: circleRect.width, height: circleRect.height))
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
 
-        let image = renderer.image { (context) in
+        let circleImage = renderer.image { (context) in
             context.cgContext.setFillColor(color.cgColor)
             context.cgContext.addPath(circleCGPath.cgPath)
             context.cgContext.drawPath(using: .fill)
         }
 
-        self.offsetX = offsetX
-        self.offsetY = offsetY
-
-        let newCircleRect = CGRect(x: offsetX, y: offsetY, width: circleRect.width, height: circleRect.height)
-
-        image.draw(in: newCircleRect)
-
-        let leading = newCircleRect.origin.x // x coord
-        let trailing = newCircleRect.origin.x + newCircleRect.size.width // width
-        let bottom = newCircleRect.origin.y + newCircleRect.size.height // height
-        let top = newCircleRect.origin.y // y coord
+        let leading = rect.origin.x // x coord
+        let trailing = rect.origin.x + rect.size.width // width
+        let bottom = rect.origin.y + rect.size.height // height
+        let top = rect.origin.y // y coord
 
         let edgeInsets = EdgeInsets(leading: leading,
                                     trailing: trailing,
                                     bottom: bottom,
                                     top: top)
 
-        return edgeInsets
+        Coordinator.shared.addElementEdges(edgeInsets)
+        Coordinator.shared.addElementRect(rect)
+        Coordinator.shared.draw(element: circleImage)
     }
 
-    func addInnerText(alignment: Alignment, _ string: String, color: UIColor) {
-        let textRect = CGRect(x: offsetX, y: offsetY, width: rect.width, height: rect.height)
-        DrawableText.shared.drawInner(alignment: alignment, in: textRect, string, color: color)
-    }
-
-    func color(_ color: UIColor) {
-        self.color = color
+    func addInnerText(string: String, font: CGFloat, alignment: Alignment, color: UIColor) {
+        DrawableText(paperSize: paperSize, context: context).drawInner(string: string, font: font, alignment: alignment, in: rect, color: color)
     }
 }

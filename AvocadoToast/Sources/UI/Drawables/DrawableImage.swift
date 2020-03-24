@@ -11,14 +11,17 @@ import UIKit
 
 class DrawableImage {
     let paperSize: PaperSize
+    let context: UIGraphicsPDFRendererContext
 
-    init(paperSize: PaperSize) {
-           self.paperSize = paperSize
+    init(paperSize: PaperSize, context: UIGraphicsPDFRendererContext) {
+        self.paperSize = paperSize
+        self.context = context
     }
+}
 
-    static let shared = DrawableImage(paperSize: .A4)
+extension DrawableImage {
 
-    func draw(alignment: Alignment, _ image: UIImage, offsetY: CGFloat) -> EdgeInsets {
+    func draw(image: UIImage, alignment: Alignment) {
 
         let maxHeight = paperSize.sizeInPoints.height * 0.4
         let maxWidth = paperSize.sizeInPoints.width * 0.8
@@ -30,13 +33,36 @@ class DrawableImage {
         let scaledWidth = image.size.width * aspectRatio
         let scaledHeight = image.size.height * aspectRatio
 
-        let imageX = (paperSize.sizeInPoints.width - scaledWidth) / 2.0
-        let imageRect = CGRect(x: imageX,
-                               y: offsetY,
-                               width: scaledWidth,
-                               height: scaledHeight)
+        var previousStringRect = EdgeInsets()
+        if Coordinator.shared.elementsEdges.count > 0 {
+            previousStringRect = Coordinator.shared.elementsEdges.last!
+        }
 
-        image.draw(in: imageRect)
+        var imageRect = CGRect(x: 0, y: 0, width: scaledWidth, height: scaledHeight)
+
+        switch alignment {
+        case .center:
+            imageRect = CGRect(
+                x: (paperSize.sizeInPoints.width - scaledWidth) / 2.0,
+                y: previousStringRect.bottom,
+                width: scaledWidth,
+                height: scaledHeight
+            )
+        case .leading:
+            imageRect = CGRect(
+                x: 36,
+                y: previousStringRect.bottom,
+                width: scaledWidth,
+                height: scaledHeight
+            )
+        case .trailing:
+            imageRect = CGRect(
+                x: (paperSize.sizeInPoints.width - imageRect.width),
+                y: previousStringRect.bottom,
+                width: scaledWidth,
+                height: scaledHeight
+            )
+        }
 
         let leading = imageRect.origin.x // x coord
         let trailing = imageRect.origin.x + imageRect.size.width // width
@@ -48,6 +74,8 @@ class DrawableImage {
                                     bottom: bottom,
                                     top: top)
 
-        return edgeInsets
+        Coordinator.shared.addElementEdges(edgeInsets)
+        Coordinator.shared.addElementRect(imageRect)
+        Coordinator.shared.draw(element: image)
     }
 }
