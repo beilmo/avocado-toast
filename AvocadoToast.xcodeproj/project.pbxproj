@@ -26,6 +26,9 @@
 		D02B51D0240B003800BB66ED /* EggLocationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02B51CF240B003800BB66ED /* EggLocationPicker.swift */; };
 		D02B51E8241020D200BB66ED /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02B51E7241020D200BB66ED /* History.swift */; };
 		D02B51F2241029FA00BB66ED /* OrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02B51F1241029FA00BB66ED /* OrderRow.swift */; };
+		D032A07C242CD55B00C274FE /* OrderProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D032A07B242CD55B00C274FE /* OrderProcessor.swift */; };
+		D032A07E242CD56300C274FE /* LocalOrderProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D032A07D242CD56300C274FE /* LocalOrderProcessor.swift */; };
+		D032A080242CD57800C274FE /* AvocadoToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D032A07F242CD57800C274FE /* AvocadoToastView.swift */; };
 		D07A243E24103721006F5D87 /* OrderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07A243D24103721006F5D87 /* OrderPresenter.swift */; };
 		D07A244124104A4D006F5D87 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07A244024104A4D006F5D87 /* DetailView.swift */; };
 /* End PBXBuildFile section */
@@ -53,6 +56,9 @@
 		D02B51D1240B032200BB66ED /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D02B51E7241020D200BB66ED /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D02B51F1241029FA00BB66ED /* OrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRow.swift; sourceTree = "<group>"; };
+		D032A07B242CD55B00C274FE /* OrderProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderProcessor.swift; sourceTree = "<group>"; };
+		D032A07D242CD56300C274FE /* LocalOrderProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalOrderProcessor.swift; sourceTree = "<group>"; };
+		D032A07F242CD57800C274FE /* AvocadoToastView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvocadoToastView.swift; sourceTree = "<group>"; };
 		D07A243D24103721006F5D87 /* OrderPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderPresenter.swift; sourceTree = "<group>"; };
 		D07A244024104A4D006F5D87 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -163,9 +169,12 @@
 		D02B51F02410292400BB66ED /* OrderInput */ = {
 			isa = PBXGroup;
 			children = (
+				D032A07F242CD57800C274FE /* AvocadoToastView.swift */,
 				D02B51CD240AFA6300BB66ED /* EggPlacementView.swift */,
 				D02B51CF240B003800BB66ED /* EggLocationPicker.swift */,
+				D032A07D242CD56300C274FE /* LocalOrderProcessor.swift */,
 				D02B51B2240AB86300BB66ED /* OrderForm.swift */,
+				D032A07B242CD55B00C274FE /* OrderProcessor.swift */,
 			);
 			path = OrderInput;
 			sourceTree = "<group>";
@@ -261,12 +270,15 @@
 				D02B51BE240AC42000BB66ED /* Order.swift in Sources */,
 				D02B51F2241029FA00BB66ED /* OrderRow.swift in Sources */,
 				D02B51E8241020D200BB66ED /* History.swift in Sources */,
+				D032A080242CD57800C274FE /* AvocadoToastView.swift in Sources */,
 				D02B51CE240AFA6300BB66ED /* EggPlacementView.swift in Sources */,
 				D00DC430240AAEB300B57DDA /* SceneDelegate.swift in Sources */,
 				D02B51B3240AB86300BB66ED /* OrderForm.swift in Sources */,
 				D07A244124104A4D006F5D87 /* DetailView.swift in Sources */,
+				D032A07C242CD55B00C274FE /* OrderProcessor.swift in Sources */,
 				D00DC432240AAEB300B57DDA /* ContentView.swift in Sources */,
 				D02B51C0240AC43E00BB66ED /* CompleteOrder.swift in Sources */,
+				D032A07E242CD56300C274FE /* LocalOrderProcessor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,7 +416,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AvocadoToast/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 79W2U692GT;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AvocadoToast/Support/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -424,7 +436,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"AvocadoToast/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 79W2U692GT;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = AvocadoToast/Support/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
