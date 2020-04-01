@@ -34,6 +34,15 @@ extension EdgeInsets {
     }
 }
 
+extension EdgeInsets: Equatable {
+    static func == (lhs: EdgeInsets, rhs: EdgeInsets) -> Bool {
+        return lhs.bottom == rhs.bottom &&
+            lhs.top == rhs.top &&
+            lhs.leading == rhs.leading &&
+            lhs.trailing == rhs.trailing
+    }
+}
+
 protocol DrawableOperations {
     func draw(element: Any)
     func alignment(_ alignment: Alignment)

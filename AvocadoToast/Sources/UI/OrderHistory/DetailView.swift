@@ -12,6 +12,7 @@ struct DetailView: View {
     let presenter: OrderPresenter
     @State private var isPreviewPresented: Bool = false
     @State private var isActivityVCPresented: Bool = false
+    @State private var isSheetPresented: Bool = false
     
     var body: some View {
         VStack {
@@ -20,15 +21,43 @@ struct DetailView: View {
             AvocadoToastView(order: .constant(presenter.order))
                 .disabled(true)
             Spacer()
-            Button(action: { self.isPreviewPresented.toggle() }, label: {
+            Button(action: presentPDFPreview, label: {
                 Text("Preview PDF")
             })
-                .sheet(isPresented: $isPreviewPresented) {
-                    PDFOrderPreviewView(presenter: self.presenter)
-            }
             Spacer()
         }
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarTitle("Order Preview", displayMode: .inline)
+        .navigationBarItems(trailing: Button(action: presentActivityVC) {
+            Image(systemName: "square.and.arrow.up")
+        })
+        .sheet(isPresented: $isSheetPresented, onDismiss: stopPresenting) {
+            if self.isPreviewPresented {
+                PDFOrderPreviewView(presenter: self.presenter)
+            } else {
+                if self.isActivityVCPresented {
+                    ShareViewController(pdfData: PDFCreator(paperSize: .A4, presenter: self.presenter).create())
+                }
+            }
+        }
+    }
+
+    func presentPDFPreview() {
+        isSheetPresented.toggle()
+        isPreviewPresented.toggle()
+    }
+
+    func presentActivityVC() {
+        isSheetPresented.toggle()
+        isActivityVCPresented.toggle()
+    }
+
+    func stopPresenting() {
+        if isPreviewPresented {
+            isPreviewPresented.toggle()
+        }
+        if isActivityVCPresented {
+            isActivityVCPresented.toggle()
+        }
     }
 }
 

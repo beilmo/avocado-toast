@@ -23,7 +23,7 @@ struct DrawableData {
         drawableText.draw(string: "Ingredients: ", font: 17, position: .onTheNextLine, alignment: .leading)
 
         let drawableCircle = DrawableCircle(paperSize: paperSize, context: context)
-        
+
         drawableCircle.draw(color: .red)
         drawableCircle.addInnerText(string: "R", font: 17, alignment: .center, color: .label)
 

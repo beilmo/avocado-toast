@@ -13,18 +13,7 @@ struct PDFOrderPreviewView: View {
     @State private var isActivityVCPresented: Bool = false
 
     var body: some View {
-        NavigationView {
-            PDFReaderView(presenter: self.presenter)
-                .navigationBarTitle("Order Preview", displayMode: .inline)
-                .navigationBarItems(trailing: Button(action: { self.isActivityVCPresented.toggle() }) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                .sheet(isPresented: $isActivityVCPresented, content: {
-                    ShareViewController(pdfData: PDFCreator(paperSize: .A4, presenter: self.presenter).create())
-                })
-            )
-
-        }
+        PDFReaderView(presenter: self.presenter)
     }
 }
 

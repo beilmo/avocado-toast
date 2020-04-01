@@ -1,5 +1,5 @@
 //
-//  PageSize.swift
+//  PaperSize.swift
 //  AvocadoToast
 //
 //  Created by Alex Zaharia on 11/03/2020.
