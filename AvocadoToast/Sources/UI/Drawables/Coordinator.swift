@@ -35,4 +35,9 @@ class Coordinator {
     func draw(element: UIImage) {
         element.draw(in: elementsRect.last!)
     }
+
+    func clearCache() {
+        elementsEdges.removeAll()
+        elementsRect.removeAll()
+    }
 }

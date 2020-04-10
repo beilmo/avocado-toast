@@ -21,6 +21,190 @@ class DrawableText {
 
 extension DrawableText {
 
+    func addText(string: String, font: CGFloat, position: Position, alignment: Alignment) {
+
+        let attributedString = getAttributedString(string: string, font: font, color: .label)
+
+        let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
+
+        var stringRect = attributedString.rect(containerWidth: paperSize.sizeInPoints.width * 0.8)
+
+        align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
+
+        var alignedRect = Coordinator.shared.elementsRect.last!
+        var currentRange = CFRangeMake(0, 0)
+        var currentPage = 0
+        var done = false
+        repeat {
+
+            /* Draw a page number at the bottom of each page. */
+            currentPage += 1
+            //drawPageNumber(currentPage)
+
+            /* Render the current page and update the current range to
+              point to the beginning of the next page. */
+            currentRange = renderPage(rect: alignedRect,
+                                      withTextRange: currentRange,
+                                      andFramesetter: framesetter)
+
+            /* If we're at the end of the text, exit the loop. */
+            if currentRange.location == CFAttributedStringGetLength(attributedString) {
+                done = true
+            } else {
+                /* Mark the beginning of a new page. */
+                context.beginPage()
+                //var remainingTextRect = CGRect()
+
+                print(Coordinator.shared.elementsRect)
+                print(Coordinator.shared.elementsEdges)
+                if let lastTextRect = Coordinator.shared.elementsRect.last {
+                    print("Da:",stringRect)
+                    stringRect = CGRect(x: stringRect.origin.x,
+                                        y: stringRect.origin.y,
+                                        width: stringRect.width,
+                                        height: stringRect.height - (paperSize.sizeInPoints.height - lastTextRect.origin.y)+1.83)
+                    print("Da dupa:",stringRect)
+                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
+                    alignedRect = Coordinator.shared.elementsRect.last!
+                    alignedRect = CGRect(x: alignedRect.origin.x, y: 0, width: alignedRect.width, height: alignedRect.height)
+//                    stringRect = CGRect(x: 0,
+//                                        y: 0,
+//                                        width: stringRect.width,
+//                                        height: lastTextRect.bottom + stringRect.height - paperSize.sizeInPoints.height)
+//                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
+//                    alignedRect = Coordinator.shared.elementsRect.last!
+                    //print("Pula")
+                } else {
+//                    print("Da:",stringRect)
+//                    stringRect = CGRect(x: 0,
+//                                        y: 0,
+//                                        width: stringRect.width,
+//                                        height: paperSize.sizeInPoints.height - stringRect.origin.y - stringRect.height)
+//                    print("Da dupa:",stringRect)
+//                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
+//                    alignedRect = Coordinator.shared.elementsRect.last!
+                }
+
+                Coordinator.shared.clearCache()
+
+
+
+                print("Next Page")
+
+
+            }
+
+        } while !done
+
+        print(CGFloat(currentRange.location + currentRange.length))
+
+
+
+//        let leading = stringRect.origin.x // x coord
+//        let trailing = stringRect.origin.x + stringRect.size.width // width
+//        let bottom = stringRect.origin.y + stringRect.size.height // height
+//        let top = stringRect.origin.y // y coord
+//
+//        let edgeInsets = EdgeInsets(leading: leading,
+//                                    trailing: trailing,
+//                                    bottom: bottom,
+//                                    top: top)
+//
+//        Coordinator.shared.addElementEdges(edgeInsets)
+//        Coordinator.shared.addElementRect(stringRect)
+        context.cgContext.scaleBy(x: 1.0, y: -1.0)
+    }
+
+    func renderPage(rect: CGRect, withTextRange currentRange: CFRange, andFramesetter framesetter: CTFramesetter?) -> CFRange {
+        var currentRange = currentRange
+        var rect = rect
+        // Get the graphics context.
+        let currentContext = context.cgContext
+
+        /* Put the text matrix into a known state. This ensures
+            that no old scaling factors are left in place. */
+        currentContext.textMatrix = .identity
+
+        /* Create a path object to enclose the text. Use 72 point
+            margins all around the text. */
+//        var previousStringRect = EdgeInsets()
+//        if Coordinator.shared.elementsEdges.count > 0 {
+//            previousStringRect = Coordinator.shared.elementsEdges.last!
+//            print(previousStringRect)
+//        }
+
+//        let frameRect = CGRect(x: 0,
+//                               y: previousStringRect.bottom,
+//                               width: rect.width,
+//                               height: rect.height)
+        print(rect)
+        let framePath = CGMutablePath()
+        if rect.origin.y + rect.height > paperSize.sizeInPoints.height {
+            let truncatedHeight = paperSize.sizeInPoints.height - rect.origin.y
+            let truncatedRect = CGRect(x: rect.origin.x,
+                                       y: 0,
+                                       width: rect.width,
+                                       height: truncatedHeight)
+            print("truncated rect:", truncatedRect)
+            rect = truncatedRect
+            framePath.addRect(rect, transform: .identity)
+        } else {
+            let truncatedRect = CGRect(x: rect.origin.x,
+                                       y: 0,
+                                       width: rect.width,
+                                       height: rect.height)
+            rect = truncatedRect
+            framePath.addRect(truncatedRect, transform: .identity)
+        }
+
+        // Get the frame that will do the rendering.
+        // The currentRange variable specifies only the starting point. The framesetter
+        // lays out as much text as will fit into the frame.
+        let frameRef = CTFramesetterCreateFrame(framesetter!, currentRange, framePath, nil)
+
+        // Core Text draws from the bottom-left corner up, so flip
+        // the current transform prior to drawing.
+
+        if rect.origin.y == 0 {
+            currentContext.translateBy(x: 0, y: rect.height)
+
+        } else {
+            currentContext.translateBy(x: 0, y: (rect.height)) // this fucker
+            print("y: ",rect.origin.y)
+            //currentContext.scaleBy(x: 1.0, y: -1.0)
+        }
+
+        currentContext.scaleBy(x: 1.0, y: -1.0)
+
+        // Draw the frame.
+        CTFrameDraw(frameRef, currentContext)
+
+        // Update the current range based on what was drawn.
+        currentRange = CTFrameGetVisibleStringRange(frameRef)
+        currentRange.location += currentRange.length
+        currentRange.length = CFIndex(0)
+
+        return currentRange
+    }
+
+    func drawPageNumber(_ pageNum: Int) {
+
+        let pageString = getAttributedString(string: "Page \(pageNum)", font: 20, color: .label)
+
+        let pageStringSize = pageString.size()
+
+        let stringRect = CGRect(x: (paperSize.sizeInPoints.width - pageStringSize.width) / 2.0,
+                                y: paperSize.sizeInPoints.height * 0.95,
+                                width: pageStringSize.width,
+                                height: pageStringSize.height)
+
+        pageString.draw(in: stringRect)
+    }
+
+
+
+
+
     func drawInner(string: String, font: CGFloat, alignment: Alignment, in rect: CGRect, color: UIColor) {
         let attributedString = getAttributedString(string: string, font: font, color: color)
         var stringRect = attributedString.rect(containerWidth: rect.width)
@@ -298,7 +482,7 @@ extension NSAttributedString {
         let rect = self.boundingRect(with: size,
                                      options: [.usesLineFragmentOrigin, .usesFontLeading],
                                      context: nil)
-        return rect
+        return CGRect(x: rect.origin.x, y: rect.origin.y, width: ceil(rect.size.width), height: ceil(rect.size.height)+1)
     }
 }
 
