@@ -45,12 +45,16 @@ struct DrawableData {
 //
 //        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .trailing)
 
-        drawableText.addText(string: .loremIpsum, font: 20, position: .onTheNextLine, alignment: .center)
-        drawableText.addText(string: .loremIpsum2, font: 20, position: .onTheNextLine, alignment: .center)
-        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .center)
-        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .center)
-        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .center)
-        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .center)
+        for index in 0...100 {
+            print("index: ", index)
+            drawableText.addText(string: String(index), font: 30, position: .onTheNextLine, alignment: .leading)
+        }
+        drawableText.addText(string: .loremIpsum, font: 20, position: .onTheNextLine, alignment: .leading)
+        drawableText.addText(string: .loremIpsum2, font: 20, position: .onTheNextLine, alignment: .leading)
+        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
+        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
+        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
+        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
 
     }
 

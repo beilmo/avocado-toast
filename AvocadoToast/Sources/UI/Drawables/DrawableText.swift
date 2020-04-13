@@ -50,68 +50,42 @@ extension DrawableText {
             /* If we're at the end of the text, exit the loop. */
             if currentRange.location == CFAttributedStringGetLength(attributedString) {
                 done = true
+                print("Done rendering")
             } else {
                 /* Mark the beginning of a new page. */
                 context.beginPage()
-                //var remainingTextRect = CGRect()
 
-                print(Coordinator.shared.elementsRect)
-                print(Coordinator.shared.elementsEdges)
+                //print(Coordinator.shared.elementsRect)
+                //print(Coordinator.shared.elementsEdges)
+
                 if let lastTextRect = Coordinator.shared.elementsRect.last {
-                    print("Da:",stringRect)
-                    stringRect = CGRect(x: stringRect.origin.x,
-                                        y: stringRect.origin.y,
-                                        width: stringRect.width,
-                                        height: stringRect.height - (paperSize.sizeInPoints.height - lastTextRect.origin.y)+1.83)
-                    print("Da dupa:",stringRect)
-                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
-                    alignedRect = Coordinator.shared.elementsRect.last!
-                    alignedRect = CGRect(x: alignedRect.origin.x, y: 0, width: alignedRect.width, height: alignedRect.height)
-//                    stringRect = CGRect(x: 0,
-//                                        y: 0,
-//                                        width: stringRect.width,
-//                                        height: lastTextRect.bottom + stringRect.height - paperSize.sizeInPoints.height)
-//                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
-//                    alignedRect = Coordinator.shared.elementsRect.last!
-                    //print("Pula")
-                } else {
-//                    print("Da:",stringRect)
-//                    stringRect = CGRect(x: 0,
-//                                        y: 0,
-//                                        width: stringRect.width,
-//                                        height: paperSize.sizeInPoints.height - stringRect.origin.y - stringRect.height)
-//                    print("Da dupa:",stringRect)
-//                    align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
-//                    alignedRect = Coordinator.shared.elementsRect.last!
+                    if font <= stringRect.height - (paperSize.sizeInPoints.height - lastTextRect.origin.y)+1.83 {
+                        //print("Da:",stringRect)
+                        Coordinator.shared.clearCache()
+                        stringRect = CGRect(x: stringRect.origin.x,
+                                            y: stringRect.origin.y,
+                                            width: stringRect.width,
+                                            height: stringRect.height - (paperSize.sizeInPoints.height - lastTextRect.origin.y)+2)
+                        //print("Da dupa:",stringRect)
+                        align(in: stringRect, textAlignment: .center, position: .onTheNextLine)
+                        alignedRect = Coordinator.shared.elementsRect.last!
+                        alignedRect = CGRect(x: alignedRect.origin.x, y: 0, width: alignedRect.width, height: alignedRect.height)
+
+                    } else {
+                        Coordinator.shared.clearCache()
+                        align(in: alignedRect, textAlignment: .center, position: .onTheNextLine)
+                        alignedRect = CGRect(x: alignedRect.origin.x, y: 0, width: alignedRect.width, height: alignedRect.height)
+                    }
                 }
-
-                Coordinator.shared.clearCache()
-
-
-
+                //Coordinator.shared.clearCache()
                 print("Next Page")
-
-
             }
 
         } while !done
 
         print(CGFloat(currentRange.location + currentRange.length))
 
-
-
-//        let leading = stringRect.origin.x // x coord
-//        let trailing = stringRect.origin.x + stringRect.size.width // width
-//        let bottom = stringRect.origin.y + stringRect.size.height // height
-//        let top = stringRect.origin.y // y coord
-//
-//        let edgeInsets = EdgeInsets(leading: leading,
-//                                    trailing: trailing,
-//                                    bottom: bottom,
-//                                    top: top)
-//
-//        Coordinator.shared.addElementEdges(edgeInsets)
-//        Coordinator.shared.addElementRect(stringRect)
+        //defines the coords system to be efective with positive values on axis as it should be
         context.cgContext.scaleBy(x: 1.0, y: -1.0)
     }
 
@@ -127,16 +101,6 @@ extension DrawableText {
 
         /* Create a path object to enclose the text. Use 72 point
             margins all around the text. */
-//        var previousStringRect = EdgeInsets()
-//        if Coordinator.shared.elementsEdges.count > 0 {
-//            previousStringRect = Coordinator.shared.elementsEdges.last!
-//            print(previousStringRect)
-//        }
-
-//        let frameRect = CGRect(x: 0,
-//                               y: previousStringRect.bottom,
-//                               width: rect.width,
-//                               height: rect.height)
         print(rect)
         let framePath = CGMutablePath()
         if rect.origin.y + rect.height > paperSize.sizeInPoints.height {
@@ -154,7 +118,8 @@ extension DrawableText {
                                        width: rect.width,
                                        height: rect.height)
             rect = truncatedRect
-            framePath.addRect(truncatedRect, transform: .identity)
+            print("normal rect:", truncatedRect)
+            framePath.addRect(rect, transform: .identity)
         }
 
         // Get the frame that will do the rendering.
