@@ -41,9 +41,9 @@ struct DrawableData {
 //        drawableCircle.draw(color: .blue)
 //        drawableCircle.addInnerText(string: "E", font: 17, alignment: .center, color: .yellow)
 //
-//        let drawableImage = DrawableImage(paperSize: paperSize, context: context)
-//
-//        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .trailing)
+        let drawableImage = DrawableImage(paperSize: paperSize, context: context)
+
+        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .trailing)
 
         for index in 0...100 {
             print("index: ", index)
@@ -55,6 +55,15 @@ struct DrawableData {
         drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
         drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
         drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
+
+        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .center)
+
+        drawableText.addText(string: .loremIpsum3, font: 20, position: .onTheNextLine, alignment: .leading)
+
+        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .center)
+        drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .center)
+
+        drawableText.addText(string: .loremIpsum3, font: 30, position: .onTheNextLine, alignment: .leading)
 
     }
 
