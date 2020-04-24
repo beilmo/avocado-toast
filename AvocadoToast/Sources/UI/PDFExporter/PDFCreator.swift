@@ -43,7 +43,11 @@ class PDFCreator: PDFOperations {
             context.beginPage()
 
             //DrawableElements
-            DrawableData().render(context: context)
+
+            DrawableEnvironment.context = context
+            DrawableEnvironment.paperSize = paperSize
+
+            DrawableData().render()
 
 //            let titleText = DrawableText(paperSize: paperSize, context: context).drawTitle(alignment: .center, presenter.summary)
 //            let timestampText = DrawableText(paperSize: paperSize, context: context).drawText(alignment: .leading, presenter.purchaseDate, offsetY: (titleText + paperSize.sizeInPoints.height * 0.1))

@@ -9,14 +9,8 @@
 import Foundation
 import UIKit
 
-class DrawableText {
-    let paperSize: PaperSize
-    let context: UIGraphicsPDFRendererContext
+class DrawableText: Drawable {
 
-    init(paperSize: PaperSize, context: UIGraphicsPDFRendererContext) {
-        self.paperSize = paperSize
-        self.context = context
-    }
 }
 
 extension DrawableText {
@@ -53,8 +47,8 @@ extension DrawableText {
                 print("Done rendering")
             } else {
                 /* Mark the beginning of a new page. */
-                context.beginPage()
-
+                context!.beginPage()
+                
                 //determines the rect height for the left string range
                 //the entire text is not fitting the current page, so we determine the remaining rect necessary to draw the rest
                 // rect dimensions are determined by calculating the range of characters left to draw from string
@@ -66,21 +60,21 @@ extension DrawableText {
                 alignedRect = Coordinator.shared.elementsRect.last!
                 alignedRect = CGRect(x: alignedRect.origin.x, y: 0, width: alignedRect.width, height: alignedRect.height)
 
-                print("Next Page")
+                //print("Next Page")
             }
         } while !done
 
         print(CGFloat(currentRange.location + currentRange.length))
 
         //defines the coords system to be efective with positive values on axis as it should be
-        context.cgContext.scaleBy(x: 1.0, y: -1.0)
+        context!.cgContext.scaleBy(x: 1.0, y: -1.0)
     }
 
     func renderPage(rect: CGRect, withTextRange currentRange: CFRange, andFramesetter framesetter: CTFramesetter?) -> CFRange {
         var currentRange = currentRange
         var rect = rect
         // Get the graphics context.
-        let currentContext = context.cgContext
+        let currentContext = context!.cgContext
 
         /* Put the text matrix into a known state. This ensures
             that no old scaling factors are left in place. */
@@ -89,26 +83,25 @@ extension DrawableText {
         /* Create a path object to enclose the text. Use 72 point
             margins all around the text. */
         // When drawing in an opposite Y position (CoreText bottom-left axis system) we need to substract the origin of Y and the height in order to render at the desired position, because the drawing is realised from the bottom to top
-        print(rect)
-        let framePath = CGMutablePath()
+        
+        //print(rect)
         if rect.origin.y + rect.height > paperSize.sizeInPoints.height {
             let truncatedHeight = paperSize.sizeInPoints.height - rect.origin.y
             let truncatedRect = CGRect(x: rect.origin.x,
-                                       y: -rect.origin.y-truncatedHeight,
+                                       y: -(rect.origin.y + truncatedHeight),
                                        width: rect.width,
                                        height: truncatedHeight)
-            print("truncated rect:", truncatedRect)
             rect = truncatedRect
-            framePath.addRect(rect, transform: .identity)
         } else {
-            let truncatedRect = CGRect(x: rect.origin.x,
-                                       y: -rect.origin.y-rect.height,
-                                       width: rect.width,
-                                       height: rect.height)
-            rect = truncatedRect
-            print("normal rect:", truncatedRect)
-            framePath.addRect(rect, transform: .identity)
+            let newRect = CGRect(x: rect.origin.x,
+                                 y: -(rect.origin.y + rect.height),
+                                 width: rect.width,
+                                 height: rect.height)
+            rect = newRect
         }
+
+        let framePath = CGMutablePath()
+        framePath.addRect(rect, transform: .identity)
 
         // Get the frame that will do the rendering.
         // The currentRange variable specifies only the starting point. The framesetter
@@ -117,16 +110,7 @@ extension DrawableText {
 
         // Core Text draws from the bottom-left corner up, so flip
         // the current transform prior to drawing.
-
-        if rect.origin.y == 0 {
-            currentContext.translateBy(x: 0, y: rect.height)
-
-        } else {
-            currentContext.translateBy(x: 0, y: 0) // this fucker
-            print("y: ",rect.origin.y)
-            //currentContext.scaleBy(x: 1.0, y: -1.0)
-        }
-
+        currentContext.translateBy(x: 0, y: 0)
         currentContext.scaleBy(x: 1.0, y: -1.0)
 
         // Draw the frame.
@@ -180,6 +164,8 @@ extension DrawableText {
                 width: stringRect.width,
                 height: stringRect.height
             )
+        default:
+            break
         }
         //Coordinator.shared.addElementRect(textStringRect)
         //Coordinator.shared.draw(element: attributedString)
@@ -243,6 +229,8 @@ extension DrawableText {
                     width: rect.width,
                     height: rect.height
                 )
+            default:
+                break
             }
         case .onTheSameLine:
             switch textAlignment {
@@ -267,6 +255,8 @@ extension DrawableText {
                     width: rect.width,
                     height: rect.height
                 )
+            default:
+                break
             }
         }
 

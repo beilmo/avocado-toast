@@ -40,4 +40,9 @@ class Coordinator {
         elementsEdges.removeAll()
         elementsRect.removeAll()
     }
+
+    func removeLastEntries() {
+        elementsEdges.removeLast()
+        elementsRect.removeLast()
+    }
 }

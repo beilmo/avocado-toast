@@ -9,14 +9,8 @@
 import Foundation
 import UIKit
 
-class DrawableImage {
-    let paperSize: PaperSize
-    let context: UIGraphicsPDFRendererContext
+class DrawableImage: Drawable {
 
-    init(paperSize: PaperSize, context: UIGraphicsPDFRendererContext) {
-        self.paperSize = paperSize
-        self.context = context
-    }
 }
 
 extension DrawableImage {
@@ -62,6 +56,8 @@ extension DrawableImage {
                 width: scaledWidth,
                 height: scaledHeight
             )
+        default:
+            break
         }
 
         let leading = imageRect.origin.x // x coord

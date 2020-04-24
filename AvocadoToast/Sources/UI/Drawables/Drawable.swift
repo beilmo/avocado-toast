@@ -19,6 +19,7 @@ enum Alignment {
     case center
     case trailing
     case leading
+    case `default`
 }
 
 struct EdgeInsets {
@@ -43,38 +44,20 @@ extension EdgeInsets: Equatable {
     }
 }
 
-protocol DrawableOperations {
-    func draw(element: Any)
-    func alignment(_ alignment: Alignment)
-    func offset(_ offset: CGFloat)
+class DrawableContext<T> where T: UIGraphicsPDFRendererContext {
+    let context: T
+
+    init(context: T) {
+        self.context = context
+    }
 }
 
-enum ElementType {
-    case text
-    case image
-    case circle
+class DrawableEnvironment {
+    static var context: UIGraphicsPDFRendererContext? = nil
+    static var paperSize: PaperSize = .A4
 }
 
-struct ElementDrawer<T> {
-    private var drawableObject: T
-
-    func offset(_ offset: CGFloat) {
-        
-    }
-
-    func draw(element: T) -> EdgeInsets {
-        return EdgeInsets()
-    }
-
-    // used to verify if the drawing could be completed based on the result of type Bool
-    // the result will be false when the element cannot be drew due to the lack of space
-    func draw(element: T, completion: (Bool) -> ()) -> EdgeInsets {
-        return EdgeInsets()
-    }
-
-    func alignment(_ alignment: Alignment) {
-        
-    }
-
-    var rect: CGRect
+class Drawable: DrawableEnvironment {
+    var context: UIGraphicsPDFRendererContext? = DrawableEnvironment.context
+    var paperSize: PaperSize = DrawableEnvironment.paperSize
 }

@@ -9,39 +9,24 @@
 import Foundation
 import UIKit
 
-struct DrawableData {
-    func render(context: UIGraphicsPDFRendererContext) {
+class DrawableData {
+
+    func render() {
         //paper size
         let paperSize: PaperSize = .A4
 
         //render elements
-        renderElements(paperSize: paperSize, context: context)
+        renderElements(paperSize: paperSize)
 
         //finish rendering
         finishRendering()
     }
 
-    func renderElements(paperSize: PaperSize, context: UIGraphicsPDFRendererContext) {
+    func renderElements(paperSize: PaperSize) {
         //DrawableElements
-        let drawableText = DrawableText(paperSize: paperSize, context: context)
+        let drawableText = DrawableText()
 
-//        drawableText.draw(string: "Ana are mere", font: 50, position: .onTheNextLine, alignment: .center)
-//        drawableText.draw(string: .loremIpsum, font: 17, position: .onTheNextLine, alignment: .leading)
-//        drawableText.draw(string: .loremIpsum, font: 17, position: .onTheNextLine, alignment: .trailing)
-//        drawableText.draw(string: "Ingredients: ", font: 17, position: .onTheNextLine, alignment: .leading)
-
-//        let drawableCircle = DrawableCircle(paperSize: paperSize, context: context)
-//
-//        drawableCircle.draw(color: .red)
-//        drawableCircle.addInnerText(string: "R", font: 17, alignment: .center, color: .label)
-//
-//        drawableCircle.draw(color: .yellow)
-//        drawableCircle.addInnerText(string: "S", font: 17, alignment: .center, color: .blue)
-//
-//        drawableCircle.draw(color: .blue)
-//        drawableCircle.addInnerText(string: "E", font: 17, alignment: .center, color: .yellow)
-//
-        let drawableImage = DrawableImage(paperSize: paperSize, context: context)
+        let drawableImage = DrawableImage()
 
         drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .trailing)
 
@@ -64,6 +49,13 @@ struct DrawableData {
         drawableImage.draw(image: UIImage(named: "Toast")!, alignment: .center)
 
         drawableText.addText(string: .loremIpsum3, font: 30, position: .onTheNextLine, alignment: .leading)
+
+        drawableText.addText(string: "Ingredients: ", font: 20, position: .onTheNextLine, alignment: .leading)
+
+        DrawableCircle()
+            .color(.blue)
+            .size(30)
+            .addInnerText(string: "R", font: 20, alignment: .center, color: .white)
 
     }
 
